@@ -65,10 +65,15 @@ add_action( 'add_meta_boxes_feeds_generator', 'adding_custom_meta_boxes', 10, 2 
 
 function render_my_meta_box() {
 	//$urlToFetch = get_post_meta($post_id, 'url_for_meta');
-	$urlToFetch = get_post_meta($_GET['post'], '_urlForFeeds', ARRAY_A);
-	$itemWrapper = get_post_meta($_GET['post'], '_itemWrapper', ARRAY_A);
-	$titleWrapper = get_post_meta($_GET['post'], '_titleWrapper', ARRAY_A);
-	$descriptionWrapper = get_post_meta($_GET['post'], '_descriptionWrapper', ARRAY_A);
+	if( !empty($_GET['post']) ) {
+		$urlToFetch = get_post_meta($_GET['post'], '_urlForFeeds', ARRAY_A);
+		$itemWrapper = get_post_meta($_GET['post'], '_itemWrapper', ARRAY_A);
+		$titleWrapper = get_post_meta($_GET['post'], '_titleWrapper', ARRAY_A);
+		$descriptionWrapper = get_post_meta($_GET['post'], '_descriptionWrapper', ARRAY_A);
+	}
+	else {
+		$urlToFetch = $itemWrapper = $titleWrapper = $descriptionWrapper = "";
+	}
 	// $siteHtml = wp_remote_get($urlToFetch);  
 	// if(is_array($siteHtml) && $siteHtml['body']) {
 	// 	$siteBody = $siteHtml['body'];
@@ -133,3 +138,12 @@ function wpse72544_set_template( $template ){
 
     return $template;
 }
+
+// add_action('init', 'customRSS');
+// function customRSS(){
+//     add_feed('speakingTree', 'customRSSFunc');
+// }
+
+// function customRSSFunc(){
+//     return plugin_dir_path( __FILE__ ) . 'rsss.php';
+// }
