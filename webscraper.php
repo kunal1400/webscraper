@@ -57,7 +57,7 @@ function feeds_generator_init() {
 function adding_custom_meta_boxes( ) {
     add_meta_box(
         'my-meta-box',
-        __( 'My Meta Box' ),
+        __( 'Web Scrapper Tool' ),
         'render_my_meta_box'
     );
 }
@@ -70,6 +70,7 @@ function render_my_meta_box() {
 		$itemWrapper = get_post_meta($_GET['post'], '_itemWrapper', ARRAY_A);
 		$titleWrapper = get_post_meta($_GET['post'], '_titleWrapper', ARRAY_A);
 		$descriptionWrapper = get_post_meta($_GET['post'], '_descriptionWrapper', ARRAY_A);
+		echo "<h3><a target='_blank' href='".get_permalink($_GET['post'])."?visualEditor=true'>Click Here for VISUAL EDITOR</a></h3>";
 	}
 	else {
 		$urlToFetch = $itemWrapper = $titleWrapper = $descriptionWrapper = "";
@@ -152,3 +153,26 @@ function wpse72544_set_template( $template ){
 // function customRSSFunc(){
 //     return plugin_dir_path( __FILE__ ) . 'rsss.php';
 // }
+
+add_action('wp_ajax_wp_scrapper_update_selectors', 'wp_scrapper_update_selectors');
+add_action('wp_ajax_nopriv_wp_scrapper_update_selectors', 'wp_scrapper_update_selectors');
+
+function wp_scrapper_update_selectors() {	
+	if( isset($_POST['postId']) ) {
+		$post_id = $_POST['postId'];
+		if( !empty($_POST['selectedWrapper']) ) {
+			update_post_meta($post_id, '_itemWrapper', $_POST['selectedWrapper']);
+		}
+		if( !empty($_POST['selectedTitle']) ) {
+			update_post_meta($post_id, '_titleWrapper', $_POST['selectedTitle']);
+		}
+		if( !empty($_POST['selectedDescription']) ) {
+			update_post_meta($post_id, '_descriptionWrapper', $_POST['selectedDescription']);
+		}
+		echo "success";
+	}
+	else {
+		echo "Post id is required";
+	}
+	wp_die();
+}

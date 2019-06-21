@@ -19,22 +19,49 @@ curl_close($ch);
 
 <div style="width: 100%;clear: both;">
 	<div style="width: 100%;clear: both;">
-		<div style="width:20%;float: left;position: fixed;top: 0;">
-			<div><a href="javascript:void(0)" id="0" class="sidebarSelector" onclick="setSeletorType(this)" >SELECT ITEMS WRAPPER</a></div>
-			<div><a href="javascript:void(0)" id="1" class="sidebarSelector" onclick="setSeletorType(this)" >SELECT TITLE</a></div>
-			<div><a href="javascript:void(0)" id="2" class="sidebarSelector" onclick="setSeletorType(this)" >SELECT IMAGE</a></div>
-			<div><a href="javascript:void(0)" id="3" class="sidebarSelector" onclick="setSeletorType(this)" >SELECT DESCRIPTION</a></div>
-			<div><a href="javascript:void(0)" onclick="submitSelectors(this)" >SAVE AND GENERATE FEEDS</a></div>
+		<div style="width:20%;float: left;position: fixed;top: 0; border-right: 1px solid #FF9F63;height: 100%;background-color: #FED587;">
+			<h3 style="text-align: center; padding: 20px;background-color: #FF9F63; color: #ffffff;">Use these selectors</h3>
+			<div style="margin-top: 10px;"><a href="javascript:void(0)" id="0" class="sidebarSelector" onclick="setSeletorType(this)" >Select a News item</a></div>
+			<hr/>
+			<div style="margin-top: 10px;"><a href="javascript:void(0)" id="1" class="sidebarSelector" onclick="setSeletorType(this)" >Headline</a></div>
+			<div style="margin-top: 10px;"><a href="javascript:void(0)" id="2" class="sidebarSelector" onclick="setSeletorType(this)" >Illustration</a></div>
+			<div style="margin-top: 10px;"><a href="javascript:void(0)" id="3" class="sidebarSelector" onclick="setSeletorType(this)" >Summary</a></div>
+			<hr/>
+			<div style="margin-top: 10px;"><a href="javascript:void(0)" class="generateRss" onclick="submitSelectors(this)" >Generate RSS</a></div>
 		</div>
-		<div id="dynamicContent" style="width:80%;float: right;"><?php echo $output ?></div>
+		<div style="width:80%;float: right;">
+			<h3 style="text-align: center; padding: 20px;background-color: #F39355; color: #ffffff;">To create parsing pattern, Click on elements you want to be in your RSS</h3>
+			<div id="dynamicContent"><?php echo $output ?></div>
+		</div>
 	</div>
 </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 <style type="text/css">
-	.highlight {
-		border: 1px solid black !important;
+	.generateRss {
+		display: block;
+	    margin: 15px auto 0;
+	    font-size: 16px;
+	    height: auto;
+	    line-height: 16px;
+	    width: auto;
+	    padding: 15px 25px;
+	    background-color: rgba(86, 201, 144, 0.2);
+	    border: 1px solid #57bb89;
+	    color: inherit;
 	}
+	.sidebarSelector {
+		padding: 10px 0 10px 15px !important;
+		width: 100%;
+    	display: inline-block;
+		/*margin-top: 5px !important;*/
+	}
+	.highlight {
+		border: 3px solid black !important;
+	}
+	/*.highlight > * {
+		padding: 5px !important;
+	}*/
 	.highlightWrapper {
 		border: 3px solid red !important;
 		/*padding: 10px;*/
@@ -48,7 +75,7 @@ curl_close($ch);
 		/*padding: 3px;*/
 	}
 	.highlightActiveSelector {
-		background-color: cyan !important;
+		background-color: #57bb89 !important;    	
 	}
 </style>
 <script type="text/javascript">
@@ -64,13 +91,42 @@ curl_close($ch);
 	}
 	
 	function submitSelectors() {
-		console.log(selectedWrapper, selectedTitle, selectedDescription, 'selectedWrapper = selectedTitle = selectedDescription')
+		if(selectedWrapper && selectedTitle && selectedDescription) {
+			var queryParamsJson = {
+				"action" : 'wp_scrapper_update_selectors',
+				"postId": <?php echo $post->ID ?>,
+				"selectedWrapper": selectedWrapper,
+				"selectedTitle": selectedTitle,
+				"selectedDescription": selectedDescription
+			}
+			// var queryParamsJson = "action=wp_scrapper_update_selectors&postId=<?php echo $post->ID ?>&selectedWrapper="+selectedWrapper+"&selectedTitle="+selectedTitle+"&selectedDescription="+selectedDescription;			
+	        jQuery.ajax({	            
+	            url    : "<?php echo admin_url( 'admin-ajax.php' ) ?>",
+	            data   : queryParamsJson,			    
+		        type: 'POST',
+	            success: function(data) {
+	            	console.log(data)
+	                //jQuery("#feedback").html(data);
+	                alert("success")
+	                window.location.href = "<?php echo get_permalink($post) ?>"
+	            },
+	            error: function(error) {
+	            	alert("Error")
+	            	console.log(error)
+	            }
+	        });
+		}
+		else {
+			alert("Please select news item, heading and Summary")
+		}		
+		// 	console.log(queryParamsJson, 'this is clicked')
+		// 	window.location.href = "http://localhost/test/index.php?"+queryParamsJson
 	}
 
 	$(document.getElementById("dynamicContent")).click( function(e) {
 		e.preventDefault();
 		if( !selector ) {
-			alert("Please select selector from sidebar")
+			alert("Please select an item from sidebar")
 			return;
 		}
 		
