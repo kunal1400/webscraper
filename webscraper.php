@@ -132,8 +132,13 @@ function wpse72544_set_template( $template ){
      */
 
     if(is_singular('feeds_generator') && 'single-feeds_generator.php' != $template ){
-        //WordPress couldn't find an 'event' template. Use plug-in instead:
-        $template = plugin_dir_path( __FILE__ ) . 'rss.php';
+        //WordPress couldn't find an 'event' template. Use plug-in instead:        
+        if( isset($_GET['visualEditor']) && $_GET['visualEditor'] == true ) {
+        	$template = plugin_dir_path( __FILE__ ) . 'visualEditor.php';
+        }
+        else {
+        	$template = plugin_dir_path( __FILE__ ) . 'rss.php';        	
+        }
     }
 
     return $template;
