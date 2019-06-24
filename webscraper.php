@@ -55,13 +55,46 @@ function feeds_generator_init() {
 }
 
 function adding_custom_meta_boxes( ) {
+    $screen = get_current_screen();
     add_meta_box(
-        'my-meta-box',
-        __( 'Web Scrapper Tool' ),
-        'render_my_meta_box'
+        'my-meta-box-url',
+        __( 'Enter url to Scrap' ),
+        'render_my_meta_box1'
     );
+    if( 'add' != $screen->action ) {
+    	add_meta_box(
+	        'my-meta-box-selectors',
+	        __( 'Enter url to Scrap' ),
+	        'render_my_meta_box'
+	    );
+    }    
 }
 add_action( 'add_meta_boxes_feeds_generator', 'adding_custom_meta_boxes', 10, 2 );
+
+function render_my_meta_box1() {
+	//$urlToFetch = get_post_meta($post_id, 'url_for_meta');
+	if( !empty($_GET['post']) ) {
+		$urlToFetch = get_post_meta($_GET['post'], '_urlForFeeds', ARRAY_A);		
+	}
+	else {
+		$urlToFetch = $itemWrapper = $titleWrapper = $descriptionWrapper = "";
+	}
+	echo "<h3><p>Please add the url which you want to scrap and then hit publish button. After then you will get the link for Visual Editor and by using that editor you can do scrapping of any site.</p></h3>";
+	// $siteHtml = wp_remote_get($urlToFetch);  
+	// if(is_array($siteHtml) && $siteHtml['body']) {
+	// 	$siteBody = $siteHtml['body'];
+	// }
+	echo '<div id="feedsGeneratorId1">			
+		<form action="" method="post">			
+			<ul>
+		        <li>
+		        	<label for="urlForFeeds">Url to Fetch<span> *</span>: </label>
+		        	<input name="urlForFeeds" id="urlForFeeds" value="'.$urlToFetch.'" required/>
+		        </li>		        
+		    </ul>
+		</form>		
+	</div>';
+}
 
 function render_my_meta_box() {
 	//$urlToFetch = get_post_meta($post_id, 'url_for_meta');
@@ -71,6 +104,25 @@ function render_my_meta_box() {
 		$titleWrapper = get_post_meta($_GET['post'], '_titleWrapper', ARRAY_A);
 		$descriptionWrapper = get_post_meta($_GET['post'], '_descriptionWrapper', ARRAY_A);
 		echo "<h3><a target='_blank' href='".get_permalink($_GET['post'])."?visualEditor=true'>Click Here for VISUAL EDITOR</a></h3>";
+		echo '<div id="feedsGeneratorId">			
+			<form action="" method="post">
+				<ul>		        
+			        <li><b>If you have knowledge of css selector then you can directly put those selector in below Wrappers</b></li>
+			        <li>
+			        	<label for="itemWrapper">Item Wrapper: </label>
+			        	<input id="itemWrapper" name="itemWrapper" value="'.$itemWrapper.'" />
+			        </li>
+			        <li>
+			        	<label for="titleWrapper">Title Wrapper: </label>
+			        	<input id="titleWrapper" name="titleWrapper" value="'.$titleWrapper.'" />
+			        </li>
+			        <li>
+			        	<label for="descriptionWrapper">Description Wrapper: </label>
+			        	<input id="descriptionWrapper" name="descriptionWrapper" value="'.$descriptionWrapper.'" />
+			        </li>
+			    </ul>
+			</form>		
+		</div>';
 	}
 	else {
 		$urlToFetch = $itemWrapper = $titleWrapper = $descriptionWrapper = "";
@@ -78,29 +130,7 @@ function render_my_meta_box() {
 	// $siteHtml = wp_remote_get($urlToFetch);  
 	// if(is_array($siteHtml) && $siteHtml['body']) {
 	// 	$siteBody = $siteHtml['body'];
-	// }
-	echo '<div id="feedsGeneratorId">
-		<form action="" method="post">			
-			<ul>
-		        <li>
-		        	<label for="urlForFeeds">Url to Fetch<span> *</span>: </label>
-		        	<input name="urlForFeeds" id="urlForFeeds" value="'.$urlToFetch.'" required/>
-		        </li>
-		        <li>
-		        	<label for="itemWrapper">Item Wrapper<span> *</span>: </label>
-		        	<input id="itemWrapper" name="itemWrapper" value="'.$itemWrapper.'" required/>
-		        </li>
-		        <li>
-		        	<label for="titleWrapper">Title Wrapper<span> *</span>: </label>
-		        	<input id="titleWrapper" name="titleWrapper" value="'.$titleWrapper.'" required/>
-		        </li>
-		        <li>
-		        	<label for="descriptionWrapper">Description Wrapper<span> *</span>: </label>
-		        	<input id="descriptionWrapper" name="descriptionWrapper" value="'.$descriptionWrapper.'" required/>
-		        </li>
-		    </ul>
-		</form>		
-	</div>';
+	// }	
 }
 
 function wporg_save_postdata($post_id) {    

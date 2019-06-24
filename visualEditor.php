@@ -107,7 +107,7 @@ curl_close($ch);
 	            success: function(data) {
 	            	console.log(data)
 	                //jQuery("#feedback").html(data);
-	                alert("success")
+	                //alert("success")
 	                window.location.href = "<?php echo get_permalink($post) ?>"
 	            },
 	            error: function(error) {
