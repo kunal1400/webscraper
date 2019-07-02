@@ -19,7 +19,7 @@ curl_close($ch);
 
 <div style="width: 100%;clear: both;">
 	<div style="width: 100%;clear: both;">
-		<div style="width:20%;float: left;position: fixed;top: 0; border-right: 1px solid #FF9F63;height: 100%;background-color: #FED587;">
+		<div style="width:20%;float: left;position: fixed;top: 0;border-right: 1px solid #FF9F63;height: 100%;background-color: #FED587;z-index: 99999999999;">
 			<h3 style="text-align: center; padding: 20px;background-color: #FF9F63; color: #ffffff;">Use these selectors</h3>
 			<div style="margin-top: 10px;"><a href="javascript:void(0)" id="0" class="sidebarSelector" onclick="setSeletorType(this)" >Select a News item</a></div>
 			<hr/>
@@ -29,7 +29,7 @@ curl_close($ch);
 			<hr/>
 			<div style="margin-top: 10px;"><a href="javascript:void(0)" class="generateRss" onclick="submitSelectors(this)" >Generate RSS</a></div>
 		</div>
-		<div style="width:80%;float: right;">
+		<div style="width:80%;float: right;overflow: scroll;">
 			<h3 style="text-align: center; padding: 20px;background-color: #F39355; color: #ffffff;">To create parsing pattern, Click on elements you want to be in your RSS</h3>
 			<div id="dynamicContent"><?php echo $output ?></div>
 		</div>
@@ -92,6 +92,7 @@ curl_close($ch);
 	
 	function submitSelectors() {
 		if(selectedWrapper && selectedTitle && selectedDescription) {
+			$(".generateRss").text("Generating...")
 			var queryParamsJson = {
 				"action" : 'wp_scrapper_update_selectors',
 				"postId": <?php echo $post->ID ?>,
@@ -106,12 +107,14 @@ curl_close($ch);
 		        type: 'POST',
 	            success: function(data) {
 	            	console.log(data)
+					$(".generateRss").text("Generated")	            	
 	                //jQuery("#feedback").html(data);
 	                //alert("success")
-	                window.location.href = "<?php echo get_permalink($post) ?>"
+	                window.location.href = "<?php echo get_permalink($post) ?>?screen=output"
 	            },
 	            error: function(error) {
 	            	alert("Error")
+	            	$(".generateRss").text("Generate Again")	            	
 	            	console.log(error)
 	            }
 	        });

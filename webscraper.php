@@ -86,12 +86,12 @@ function render_my_meta_box1() {
 	// }
 	echo '<div id="feedsGeneratorId1">			
 		<form action="" method="post">			
-			<ul>
-		        <li>
-		        	<label for="urlForFeeds">Url to Fetch<span> *</span>: </label>
-		        	<input name="urlForFeeds" id="urlForFeeds" value="'.$urlToFetch.'" required/>
-		        </li>		        
-		    </ul>
+			<table style="width:100%">
+		        <tr>
+		        	<td><label for="urlForFeeds">Url to Fetch<span> *</span>: </label></td>
+		        	<td><input style="width:100%" name="urlForFeeds" id="urlForFeeds" value="'.$urlToFetch.'" required/></td>
+		        </tr>		        
+		    </table>
 		</form>		
 	</div>';
 }
@@ -166,6 +166,9 @@ function wpse72544_set_template( $template ){
         //WordPress couldn't find an 'event' template. Use plug-in instead:        
         if( isset($_GET['visualEditor']) && $_GET['visualEditor'] == true ) {
         	$template = plugin_dir_path( __FILE__ ) . 'visualEditor.php';
+        }
+        else if(isset($_GET['screen']) && $_GET['screen'] == 'output'){
+        	$template = plugin_dir_path( __FILE__ ) . 'webscraper.output.php';        	
         }
         else {
         	$template = plugin_dir_path( __FILE__ ) . 'rss.php';        	
