@@ -10,6 +10,7 @@ $url 			= get_post_meta($post->ID, '_urlForFeeds', ARRAY_A);
 $wrapperTag 	= get_post_meta($post->ID, '_itemWrapper', ARRAY_A);
 $titleTag 		= get_post_meta($post->ID, '_titleWrapper', ARRAY_A);
 $descriptionTag = get_post_meta($post->ID, '_descriptionWrapper', ARRAY_A);
+$permalink      = get_the_permalink($post->ID);
 
 // echo "<br/>-------------- SELECTORS FOUND ------------------<br/>";
 // echo "url =". $url . "<br/>";
@@ -83,7 +84,11 @@ foreach ($elements as $element) {
 // echo "</pre>";
 
 echo "<div>";
-echo "<img src='https://politepol.com/static/frontend/images/rss-640.e863374dd3d6.png' width='64' height='64'>";
+echo "<div class='wrapper'>
+        <span><img src='https://politepol.com/static/frontend/images/rss-640.e863374dd3d6.png' width='64' height='64'></span>
+        <span>$permalink</span>
+    </div>";
+
 echo "<h1>Preview:</h1>";
 foreach ($items as $i => $item) {    
     echo '<div class="well">
@@ -98,5 +103,11 @@ echo "</div>";
         background-color: #f5f5f5;
         padding: 15px;
         border-bottom: 1px dotted #ddd;
+    }
+    .wrapper {
+        display: inline-block;
+    }
+    .wrapper > * {
+        vertical-align: middle;
     }
 </style>

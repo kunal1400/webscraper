@@ -70,6 +70,10 @@ curl_close($ch);
 		border: 3px solid green !important;
 		/*padding: 6px;*/
 	}
+	.highlightThumbnail {
+		border: 3px solid orange !important;
+		/*padding: 3px;*/
+	}
 	.highlightDescription {
 		border: 3px solid blue !important;
 		/*padding: 3px;*/
@@ -139,26 +143,44 @@ curl_close($ch);
 			let classLists = e.target.classList.value.split(" ")
 			if(classLists.length > 0) {
 				for (var i = 0; i < classLists.length; i++) {
-					if(classLists[i]) {
-						classSelectorString += "."+classLists[i]+", "
+					if(classLists[i] && classLists[i] != 'highlight') {
+						if(i == 0) {
+							classSelectorString += "."+classLists[i]
+						}
+						else {
+							classSelectorString += ", ."+classLists[i]
+						}
+					}
+					// else if(classLists[i] != 'highlight') {
+					// 	continue;
+					// }
+					else {
+						// It means that this element has only our added 'highlight' class so break this loop and store its element
+						if(classLists[i] != 'highlight' && classSelectorString == "") {
+							classSelectorString += e.target.tagName.toLowerCase()
+							break;
+						}
 					}
 				}
-				classSelectorString += ".k"
 			}
 			else {
-				alert("No class preset in this wrapper please select another element")
+				alert("Selector class length is smaller or equals to 0")
 			}
-			console.log(classSelectorString, 'class lists')
 		}
+		else {
+			classSelectorString = e.target.tagName.toLowerCase()
+			console.log("__No class present for this selector so taking their element__")
+		}
+		console.log(classSelectorString, 'class lists')
 
 		//clickCount++
 		//if(clickCount < 4) {
 			if(selector == 0) {
-				$(".highlightWrapper").removeClass("highlightWrapper")
+				$(".highlightWrapper").removeClass("highlightWrapper")				
 				selectedWrapper = classSelectorString
 				//selectedWrapper = e.target.tagName
 				//e.target.classList.add("highlightWrapper")
-				$(`${classSelectorString}`).addClass("highlightWrapper")
+				$("#dynamicContent").find(`${classSelectorString}`).addClass("highlightWrapper")				
 				//$("#1").trigger("click")
 			}
 			else if(selector == 1) {
@@ -166,14 +188,14 @@ curl_close($ch);
 				selectedTitle = classSelectorString
 				//selectedTitle = e.target.tagName
 				//e.target.classList.add("highlightTitle")
-				$(`${classSelectorString}`).addClass("highlightTitle")
+				$("#dynamicContent").find(`${classSelectorString}`).addClass("highlightTitle")
 				//$("#2").trigger("click")
 			}
 			else if(selector == 2) {
-				$(".highlightDescription").removeClass("highlightDescription")
+				$(".highlightThumbnail").removeClass("highlightThumbnail")
 				selectedImages = classSelectorString
 				//selectedImages = e.target.tagName
-				e.target.classList.add("highlightImages")
+				$("#dynamicContent").find(`${classSelectorString}`).addClass("highlightThumbnail")
 				//$("#3").trigger("click")
 			}
 			else if(selector == 3) {
@@ -181,8 +203,8 @@ curl_close($ch);
 				selectedDescription = classSelectorString
 				//selectedDescription = e.target.tagName
 				//e.target.classList.add("highlightDescription")
-				$(`${classSelectorString}`).addClass("highlightDescription")
-			}
+				$("#dynamicContent").find(`${classSelectorString}`).addClass("highlightDescription")
+			}			
 		//}		
 		// else {
 		// 	var queryParamsJson = `wrapperTag=${selectedWrapper}.${selectedWrapperClasses}&titleTag=${selectedTitle}&descriptionTag=${selectedDescription}&url=${url}`

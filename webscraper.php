@@ -86,10 +86,10 @@ function render_my_meta_box1() {
 	// }
 	echo '<div id="feedsGeneratorId1">			
 		<form action="" method="post">			
-			<table style="width:100%">
+			<table width="100%">
 		        <tr>
-		        	<td><label for="urlForFeeds">Url to Fetch<span> *</span>: </label></td>
-		        	<td><input style="width:100%" name="urlForFeeds" id="urlForFeeds" value="'.$urlToFetch.'" required/></td>
+		        	<td width="20%"><label for="urlForFeeds">Url to Fetch<span> *</span>: </label></td>
+		        	<td width="80%"><input class="fullWidth" name="urlForFeeds" id="urlForFeeds" value="'.$urlToFetch.'" required/></td>
 		        </tr>		        
 		    </table>
 		</form>		
@@ -106,21 +106,23 @@ function render_my_meta_box() {
 		echo "<h3><a target='_blank' href='".get_permalink($_GET['post'])."?visualEditor=true'>Click Here for VISUAL EDITOR</a></h3>";
 		echo '<div id="feedsGeneratorId">			
 			<form action="" method="post">
-				<ul>		        
-			        <li><b>If you have knowledge of css selector then you can directly put those selector in below Wrappers</b></li>
-			        <li>
-			        	<label for="itemWrapper">Item Wrapper: </label>
-			        	<input id="itemWrapper" name="itemWrapper" value="'.$itemWrapper.'" />
-			        </li>
-			        <li>
-			        	<label for="titleWrapper">Title Wrapper: </label>
-			        	<input id="titleWrapper" name="titleWrapper" value="'.$titleWrapper.'" />
-			        </li>
-			        <li>
-			        	<label for="descriptionWrapper">Description Wrapper: </label>
-			        	<input id="descriptionWrapper" name="descriptionWrapper" value="'.$descriptionWrapper.'" />
-			        </li>
-			    </ul>
+				<table width="100%">		        
+			        <tr>
+			        	<td colspan="2"><b>If you have knowledge of css selector then you can directly put those selector in below Wrappers</b>
+			        </tr>
+			        <tr>
+			        	<td width="20%"><label for="itemWrapper">Item Wrapper: </label></td>
+			        	<td width="80%"><input class="fullWidth" id="itemWrapper" name="itemWrapper" value="'.$itemWrapper.'"/></td>
+			        </tr>
+			        <tr>
+			        	<td width="20%"><label for="titleWrapper">Title Wrapper: </label></td>
+			        	<td width="80%"><input class="fullWidth" id="titleWrapper" name="titleWrapper" value="'.$titleWrapper.'"/></td>
+			        </tr>
+			        <tr>
+			        	<td width="20%"><label for="descriptionWrapper">Description Wrapper: </label></td>
+			        	<td width="80%"><input class="fullWidth" id="descriptionWrapper" name="descriptionWrapper" value="'.$descriptionWrapper.'"/></td>
+			        </tr>
+			    </table>
 			</form>		
 		</div>';
 	}
@@ -209,3 +211,12 @@ function wp_scrapper_update_selectors() {
 	}
 	wp_die();
 }
+
+
+/**
+ * Enqueuing the js and css files on backend
+ */
+function webscrapper_enqueue_script_backend() {    
+    wp_enqueue_style( 'backend_css', plugin_dir_url( __FILE__ ) . 'css/admin.css' );
+}
+add_action('admin_enqueue_scripts', 'webscrapper_enqueue_script_backend');
