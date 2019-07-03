@@ -85,8 +85,12 @@ foreach ($elements as $element) {
 
 echo "<div>";
 echo "<div class='wrapper'>
-        <span><img src='https://politepol.com/static/frontend/images/rss-640.e863374dd3d6.png' width='64' height='64'></span>
-        <span>$permalink</span>
+        <span>
+            <img src='".plugin_dir_url( __FILE__ ).'images/feed-icon-28x28.png'."' alt='RSS feed url' title='RSS feed url' />
+        </span>
+        <span>
+            <a target='_blank' href='".$permalink."'>$permalink</a>
+        </span>
     </div>";
 
 echo "<h1>Preview:</h1>";
@@ -105,9 +109,9 @@ echo "</div>";
         border-bottom: 1px dotted #ddd;
     }
     .wrapper {
-        display: inline-block;
     }
-    .wrapper > * {
+    .wrapper > span {
+        display: inline-block;
         vertical-align: middle;
     }
 </style>
